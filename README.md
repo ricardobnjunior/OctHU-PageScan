@@ -1,1 +1,1 @@
-# OctHU-PageScan
+# A Fast Fully Octave Convolutional Neural Network for Document Image Segmentation
