@@ -26,9 +26,13 @@ input_channels = 1
 train_steps = 1
 valid_steps = 1
 qtd_epochs = 10000
-train_samples = 10264
-valid_samples = 1140
-bs = 4
+#train_samples = 22092 #Smartdoc Dataset 2
+#valid_samples = 7430 #Smartdoc Dataset 2
+
+train_samples = 10264 #CDPHOTO Dataset
+valid_samples = 1140 #CDPHOTO Dataset
+
+bs = 2
 learning_rate = 0.0001
 path_to_save_new_model = "checkpoint"
 output_refined = "output"
@@ -124,28 +128,28 @@ def octHu_PageScan():
 
     up_6 = octUpsize(conv_5, 2)
     up_6 = [Concatenate()([up_6[0], conv_4[0]]), Concatenate()([up_6[1], conv_4[1]])]
-    conv_6 = OctaveConv2D(filters=init_channels*8, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_11')(up_6)
-    conv_6 = OctaveConv2D(filters=init_channels*8, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_12')(conv_6)
+    conv_6 = OctaveConv2D(filters=init_channels*8, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_11')(up_6)
+    conv_6 = OctaveConv2D(filters=init_channels*8, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_12')(conv_6)
 
     up_7 = octUpsize(conv_6, 2)
     up_7 = [Concatenate()([up_7[0], conv_3[0]]), Concatenate()([up_7[1], conv_3[1]])]
-    conv_7 = OctaveConv2D(filters=init_channels*4, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_13')(up_7)
-    conv_7 = OctaveConv2D(filters=init_channels*4, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_14')(conv_7)
+    conv_7 = OctaveConv2D(filters=init_channels*4, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_13')(up_7)
+    conv_7 = OctaveConv2D(filters=init_channels*4, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_14')(conv_7)
 
     up_8 = octUpsize(conv_7, 2)
     up_8 = [Concatenate()([up_8[0], conv_2[0]]), Concatenate()([up_8[1], conv_2[1]])]
-    conv_8 = OctaveConv2D(filters=init_channels*2, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_15')(up_8)
-    conv_8 = OctaveConv2D(filters=init_channels*2, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_16')(conv_8)
+    conv_8 = OctaveConv2D(filters=init_channels*2, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_15')(up_8)
+    conv_8 = OctaveConv2D(filters=init_channels*2, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_16')(conv_8)
 
     up_9 = octUpsize(conv_8, 2)
     up_9 = [Concatenate()([up_9[0], conv_1[0]]), Concatenate()([up_9[1], conv_1[1]])]
-    conv_9 = OctaveConv2D(filters=init_channels, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_17')(up_9)
-    conv_9 = OctaveConv2D(filters=init_channels, kernel_size=3, ratio_out=0.7, activation='relu', kernel_initializer='he_uniform',name='octave_conv_18')(conv_9)
+    conv_9 = OctaveConv2D(filters=init_channels, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_17')(up_9)
+    conv_9 = OctaveConv2D(filters=init_channels, kernel_size=3, ratio_out=0.5, activation='relu', kernel_initializer='he_uniform',name='octave_conv_18')(conv_9)
 
     conv_10 = OctaveConv2D(filters=input_channels, ratio_out=0, kernel_size=1, activation='sigmoid', kernel_initializer='he_uniform',name='output')(conv_9)
     
     model = Model(inputs=inputs, outputs=conv_10)
-    model.compile(optimizer=Adam(lr=0.001), loss=dice_coef_loss, metrics=[dice_coef])
+    model.compile(optimizer=Adam(lr=learning_rate), loss=dice_coef_loss, metrics=[dice_coef])
 
     model.summary()
 
@@ -201,7 +205,7 @@ def main(train_steps, valid_steps, train_samples, valid_samples, bs, train_fns, 
                 mask = self.model.predict_on_batch(data)
                 for i in range(mask.shape[0]):
                     cv2.imwrite(output_refined + '/%d-%d-0_mask.png' % (epoch, i), mask[i, :, :, 0] * 255)
-                    cv2.imwrite(output_refined + '/%d-%d-1_gt.png' % (epoch, i),gt[i, :, :, 0] * 255)
+                    #cv2.imwrite(output_refined + '/%d-%d-1_gt.png' % (epoch, i),gt[i, :, :, 0] * 255)
                     cv2.imwrite(output_refined + '/%d-%d-2_data.png' % (epoch, i), data[i, :, :, 0] * 255)
 
     save_net = SaveImageCallback()
