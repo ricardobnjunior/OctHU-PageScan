@@ -11,12 +11,11 @@ import threading
 from keras.optimizers import Adam
 import numpy as np
 from keras_octave_conv import OctaveConv2D, octave_dual
-from cRelu import cRelu
+
 
 cardinality = 1
 
-def oct_cRelu(x):
-    return [cRelu()(x[0]), cRelu()(x[1])]
+
 
 def oct_BatchNormalization(model):
     return [BatchNormalization()(model[0]), BatchNormalization()(model[1])]
