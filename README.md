@@ -23,8 +23,18 @@ Informations for training:
 
 Use this BibTeX to cite this repository:
 
-BibTeX
- 
+````
+@INPROCEEDINGS{9206711,  
+	author={das Neves, Ricardo Batista and Felipe Verçosa, Luiz and Macêdo, David and Dantas Bezerra, Byron Leite and Zanchettin, Cleber},  
+	booktitle={2020 International Joint Conference on Neural Networks (IJCNN)},   
+	title={A Fast Fully Octave Convolutional Neural Network for Document Image Segmentation},   
+	year={2020},  
+	volume={},  
+	number={},  
+	pages={1-6},  
+	doi={10.1109/IJCNN48605.2020.9206711}
+}
+```` 
  
   
  
